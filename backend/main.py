@@ -8,7 +8,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-from tools import search_tool, wiki_tool, save_tool
+from tools import search_tool, wiki_tool, save_tool, elsevier_tool
 
 load_dotenv()
 class QueryInput(BaseModel):
@@ -30,8 +30,8 @@ prompt = ChatPromptTemplate.from_messages(
         (
             "system",
             """
-            You are a research assistant that will help generate a research paper.
-            Answer the user query and sue necessary tools.
+            You are a helpful assistant that uses academic tools like Elsevier, Nature, or ACS whenever possible before using Wikipedia. 
+            Your responses should prioritize academic resources for research purposes, ensuring credibility and accuracy.
             Wrap the output in this format and provide no other text\n{format_instructions}
             """,
         ),
@@ -41,7 +41,9 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 ).partial(format_instructions = parser.get_format_instructions())
 
-tools = [search_tool, wiki_tool, save_tool]
+tools = [search_tool, wiki_tool, save_tool, elsevier_tool]
+
+# tools = [elsevier_tool]
 
 agent = create_tool_calling_agent(
     llm = llm,
