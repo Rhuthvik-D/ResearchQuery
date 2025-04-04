@@ -41,6 +41,21 @@ def search_elsevier(query:str) -> str:
         for entry in entries
     )
 
+def search_springer(query: str) -> str:
+    api_key = os.getenv("SPRINGER_NATURE_API_KEY")
+    url = "https://api.springernature.com/openaccess/json"
+    params = {"api_key": api_key, "q": query, "s": 1, "p": 5}
+    response = requests.get(url, params = params)
+    if response.status_code != 200:
+        return "f[Springer] Error {}: {}".format(response.status_code, response.text)
+    
+    data = response.json()
+    entries = data.get('records', [])
+    return "\n\n".join(
+        f"• {entry.get('title')} - {entry.get('journalName')}"
+        for entry in entries
+    )
+
 
 save_tool = Tool(
     name = "save_to_file",
@@ -60,6 +75,12 @@ elsevier_tool = Tool(
     name = "ElsevierSearch",
     func = search_elsevier,
     description = "Search academic publications on Elsevier Scopus.",
+)
+
+springer_nature_tool = Tool(
+    name = "SpringerNatureSearch",
+    func = search_springer,
+    description = "Search academic publications on Springer Nature and Nature as well.",
 )
 
 api_wrapper = WikipediaAPIWrapper(top_k_results = 1, doc_content_chars_max = 100)
