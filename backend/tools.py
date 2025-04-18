@@ -60,7 +60,7 @@ def search_springer(query: str) -> str:
 save_tool = Tool(
     name = "save_to_file",
     func = save_to_file,
-    description = "Saves structured data to a text file.",
+    description = "Saves structured data to a text file",
 )
 
 search = DuckDuckGoSearchRun()
@@ -68,19 +68,19 @@ search = DuckDuckGoSearchRun()
 search_tool = Tool(
     name = "search",
     func = search.run,
-    description = "Search web for information.",
+    description = "Search web for information",
 )
 
 elsevier_tool = Tool(
     name = "ElsevierSearch",
     func = search_elsevier,
-    description = "Search academic publications on Elsevier Scopus.",
+    description = "Search academic publications on Elsevier Scopus",
 )
 
 springer_nature_tool = Tool(
     name = "SpringerNatureSearch",
     func = search_springer,
-    description = "Search academic publications on Springer Nature and Nature as well.",
+    description = "Search academic publications on Springer Nature and Nature",
 )
 
 api_wrapper = WikipediaAPIWrapper(top_k_results = 1, doc_content_chars_max = 100)
